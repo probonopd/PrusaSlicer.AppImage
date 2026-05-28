@@ -24,13 +24,13 @@ jobs:
     steps:
 
     - name: Clone the repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       
     - name: Prerequisities
       run: |
         sudo apt-get update
         # locales-all is needed, otherwise it will crash with LANG=ro_RO.UTF-8
-        sudo apt-get install -y locales-all git build-essential autoconf cmake libglu1-mesa-dev libgtk-3-dev libdbus-1-dev libwebkit2gtk-4.1-dev desktop-file-utils libegl-mesa0 libnss-mdns
+        sudo apt-get install -y locales-all git build-essential autoconf cmake libglu1-mesa-dev libgtk-3-dev libdbus-1-dev libwebkit2gtk-4.1-dev desktop-file-utils libegl-mesa0 libnss-mdns libhidapi-dev
         sudo apt-get install -y libglx-mesa0 libglx0 libxcb-dri2-0 libxcb-dri3-0 libxcb-glx0 libxcb-present0 libxcb-sync1 libxcb-xfixes0 libxshmfence1 libgl1 libdrm2 libgbm1 libvulkan1
 
     - name: Clone PrusaSlicer repository
@@ -47,7 +47,7 @@ jobs:
         echo "VERSION=$CLEAN_TAG" >> $GITHUB_ENV
 
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         key: ${{ runner.os }}
 
@@ -59,7 +59,7 @@ jobs:
 
     - name: Cache Dependencies
       id: cache-dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: PrusaSlicer/deps/build/destdir
         key: dependencycache-${{ runner.os }}-${{ steps.dephash.outputs.dephash }}
@@ -67,7 +67,7 @@ jobs:
     - name: Cache Download Files
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
       id: cache-download
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: PrusaSlicer/deps/download
         key: downloadcache-${{ runner.os }}-${{ github.run_id }}
